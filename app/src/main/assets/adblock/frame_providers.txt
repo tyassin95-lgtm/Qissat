@@ -1,0 +1,36 @@
+# Brand labels of video players / embed providers that may be framed from the site.
+# A host matches when its registrable label (e.g. "cdnplus" in cdnplus.sbs, cdnplus.space,
+# w.cdnplus.org) equals an entry below, whatever the TLD. This survives the domain
+# rotation these providers do constantly.
+anaplayer
+cdnplus
+mp4plus
+anafast
+vidoba
+vidspeed
+vidhide
+vidhidepro
+vidhidevip
+streamwish
+hglink
+filemoon
+moonplayer
+doodstream
+dood
+dooood
+voe
+mixdrop
+streamtape
+streamlare
+upstream
+uqload
+vidmoly
+lulustream
+luluvdo
+streamhub
+embedwish
+dailymotion
+youtube
+youtube-nocookie
+ok.ru
+vk.com

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qissat</string>
+
+    <string name="action_retry">إعادة المحاولة</string>
+    <string name="action_home">الرئيسية</string>
+
+    <string name="error_offline_title">لا يوجد اتصال</string>
+    <string name="error_offline_message">تحقق من اتصالك بالإنترنت ثم حاول مرة أخرى.</string>
+    <string name="error_timeout_title">الموقع بطيء</string>
+    <string name="error_timeout_message">الموقع لا يستجيب حاليًا.</string>
+    <string name="error_ssl_title">فشل الاتصال الآمن</string>
+    <string name="error_ssl_message">تعذّر التحقق من شهادة أمان الموقع.</string>
+    <string name="error_server_title">الموقع غير متاح</string>
+    <string name="error_server_message">الموقع يواجه مشكلة. حاول مرة أخرى بعد قليل.</string>
+    <string name="error_other_title">حدث خطأ ما</string>
+    <string name="error_other_message">تعذّر تحميل الصفحة.</string>
+
+    <string name="menu_title">Qissat</string>
+    <string name="menu_home">الرئيسية</string>
+    <string name="menu_reload">إعادة تحميل الصفحة</string>
+    <string name="menu_cursor_on">مؤشر الريموت: يعمل</string>
+    <string name="menu_cursor_off">مؤشر الريموت: متوقف</string>
+    <string name="menu_native_on">المشغّل الأصلي: يعمل</string>
+    <string name="menu_native_off">المشغّل الأصلي: متوقف</string>
+    <string name="menu_mute">كتم / إلغاء كتم الفيديو</string>
+    <string name="menu_exit">خروج</string>
+
+    <string name="toast_external_blocked">الروابط الخارجية معطّلة</string>
+    <string name="toast_back_exit">اضغط رجوع مرة أخرى للخروج</string>
+    <string name="toast_web_player">التشغيل عبر مشغّل الموقع</string>
+    <string name="toast_cursor_on">المؤشر يعمل – الأسهم للتحريك وموافق للنقر</string>
+    <string name="toast_cursor_off">المؤشر متوقف – الأسهم لتحريك التركيز</string>
+    <string name="hint_tv">الأسهم تحرّك المؤشر وزر موافق ينقر. اضغط القائمة للخيارات.</string>
+
+    <string name="player_error">مشكلة في التشغيل. تحقق من الاتصال.</string>
+    <string name="player_use_web">مشغّل الموقع</string>
+    <string name="player_close">إغلاق</string>
+    <string name="player_mute">كتم</string>
+    <string name="player_aspect">حجم الصورة</string>
+    <string name="aspect_fit">ملائم</string>
+    <string name="aspect_zoom">تكبير</string>
+    <string name="aspect_stretch">تمديد</string>
+</resources>

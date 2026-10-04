@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qissat</string>
+
+    <string name="action_retry">Retry</string>
+    <string name="action_home">Home</string>
+
+    <string name="error_offline_title">No connection</string>
+    <string name="error_offline_message">Check your internet connection, then try again.</string>
+    <string name="error_timeout_title">Taking too long</string>
+    <string name="error_timeout_message">The site is not responding right now.</string>
+    <string name="error_ssl_title">Secure connection failed</string>
+    <string name="error_ssl_message">The site\'s security certificate could not be verified.</string>
+    <string name="error_server_title">Site unavailable</string>
+    <string name="error_server_message">The site is having problems. Please try again in a moment.</string>
+    <string name="error_other_title">Something went wrong</string>
+    <string name="error_other_message">The page could not be loaded.</string>
+
+    <string name="menu_title">Qissat</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_reload">Reload page</string>
+    <string name="menu_cursor_on">Remote cursor: On</string>
+    <string name="menu_cursor_off">Remote cursor: Off</string>
+    <string name="menu_native_on">Native player: On</string>
+    <string name="menu_native_off">Native player: Off</string>
+    <string name="menu_mute">Mute / unmute video</string>
+    <string name="menu_exit">Exit</string>
+
+    <string name="toast_external_blocked">External links are disabled</string>
+    <string name="toast_back_exit">Press back again to exit</string>
+    <string name="toast_web_player">Playing in the web player</string>
+    <string name="toast_cursor_on">Cursor on – arrows move, OK clicks</string>
+    <string name="toast_cursor_off">Cursor off – arrows move focus</string>
+    <string name="hint_tv">Arrows move the cursor, OK clicks. Press Menu for options.</string>
+
+    <string name="player_error">Playback problem. Check your connection.</string>
+    <string name="player_use_web">Web player</string>
+    <string name="player_close">Close</string>
+    <string name="player_mute">Mute</string>
+    <string name="player_aspect">Picture size</string>
+    <string name="aspect_fit">Fit</string>
+    <string name="aspect_zoom">Zoom</string>
+    <string name="aspect_stretch">Stretch</string>
+</resources>

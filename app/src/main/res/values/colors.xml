@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0B0B10</color>
+    <color name="surface">#16161F</color>
+    <color name="surface_focused">#2A2A3A</color>
+    <color name="accent">#E5395A</color>
+    <color name="accent_dark">#A81E3F</color>
+    <color name="text_primary">#F2F2F7</color>
+    <color name="text_secondary">#A3A3B5</color>
+    <color name="overlay_scrim">#99000000</color>
+</resources>
