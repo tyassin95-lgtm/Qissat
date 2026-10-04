@@ -1,2 +1,2 @@
-a58c401309b785ecb7823c6a8b58a016b8eaf5a308b9c1a90989cb46cf5660f1  dist/Qissat-1.0.0-debug.apk
-886def8d5630ffe9b7417b99d62b69c81410f227401fc61f1a2c00ab25b92f6f  dist/Qissat-1.0.0-release.apk
+c97570c2c49c1cb8e3932fbcfa9aae06ed4a2066e040cba39be0fa7a59ed9906  Qissat-1.0.1-debug.apk
+262c397088d9582a0cb654ae6a450bdb5719cb37b4c0d50086a1a8219ed556fe  Qissat-1.0.1-release.apk

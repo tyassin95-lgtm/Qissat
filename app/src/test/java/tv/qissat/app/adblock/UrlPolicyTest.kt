@@ -101,6 +101,41 @@ class UrlPolicyTest {
         assertTrue(allowed("https://cdnplus.sbs/?op=upload_srt&file_code=uu39yzf9efbq", doc = true, referer = "cdnplus.sbs"))
     }
 
+    /** Episodes added in 2026-10 go qisat -> anaplayer -> shooof.site -> provider (black player before the fix). */
+    @Test fun secondLevelWrapperChainIsAllowed() {
+        assertTrue(allowed("https://w.anaplayer.online/albaplayer/omur-usta-2026-s01e02", doc = true, referer = "www.qisat.tv"))
+        assertTrue(allowed("https://shooof.site/albaplayer/omur-usta-s01e02?serv=1", doc = true, referer = "w.anaplayer.online"))
+        assertTrue(allowed("https://cdnplus.org/embed-at6cbxn6v6hl.html", doc = true, referer = "shooof.site"))
+        // every server button of that wrapper
+        assertTrue(allowed("https://shooof.site/albaplayer/omur-usta-s01e02?serv=2", doc = true, referer = "shooof.site"))
+        assertTrue(allowed("https://voe.sx/e/rbu6jqq4wghz", doc = true, referer = "shooof.site"))
+        assertTrue(allowed("https://anafast.cyou/embed-6kry8rmw8u6c.html", doc = true, referer = "shooof.site"))
+        assertTrue(allowed("https://mp4plus.cyou/embed-hko5v0r9kt7z.html", doc = true, referer = "shooof.site"))
+        assertTrue(allowed("https://vk.com/video_ext.php?oid=792136188&id=456246077", doc = true, referer = "shooof.site"))
+    }
+
+    @Test fun rotatedWrapperDomainIsLearnedFromItsUrlShape() {
+        // a wrapper domain the app has never heard of, and a provider with a random domain behind it
+        assertTrue(allowed("https://brand-new-wrapper.example/albaplayer/x-s01e03?serv=1", doc = true, referer = "w.anaplayer.online"))
+        assertTrue(allowed("https://random-voe-mirror.example/e/abc123", doc = true, referer = "brand-new-wrapper.example"))
+        // an unrelated host that never served a wrapper page gets no such trust
+        assertFalse(allowed("https://random-voe-mirror.example/e/abc123", doc = true, referer = "never-seen.example"))
+    }
+
+    @Test fun wrapperTrustDoesNotLetAdsThrough() {
+        allowed("https://brand-new-wrapper.example/albaplayer/x?serv=1", doc = true, referer = "w.anaplayer.online")
+        // ad hosts/paths are still refused even when a trusted wrapper frames them
+        assertFalse(allowed("https://aarems.org/frame", doc = true, referer = "brand-new-wrapper.example"))
+        assertFalse(allowed("https://ad.exoclick.com/iframe", doc = true, referer = "shooof.site"))
+        // and ad frames nested inside a provider page are still refused
+        assertFalse(allowed("https://rando-ads.example/e/serve", doc = true, referer = "cdnplus.org"))
+        assertFalse(allowed("https://rando-ads.example/albaplayer/fake", doc = true, referer = "cdnplus.org"))
+    }
+
+    @Test fun siteMayPlaceAWrapperDirectly() {
+        assertTrue(allowed("https://another-wrapper.example/albaplayer/some-movie", doc = true, referer = "www.qisat.tv"))
+    }
+
     @Test fun rotatedProviderDomainsKeepWorking() {
         assertTrue(allowed("https://cdnplus.xyz/embed-new.html", doc = true, referer = "w.anaplayer.online"))
         assertTrue(allowed("https://w.vidhide.com/v/abc", doc = true, referer = null))

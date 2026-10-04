@@ -16,21 +16,21 @@ Pre-built, ready-to-install APKs are in [`dist/`](dist/):
 
 | File | Use |
 |---|---|
-| `Qissat-1.0.0-release.apk` | **Recommended.** Optimised (R8), signed. |
-| `Qissat-1.0.0-debug.apk` | Debuggable build, installs *next to* the release one (`tv.qissat.app.debug`). |
+| `Qissat-1.0.1-release.apk` | **Recommended.** Optimised (R8), signed. |
+| `Qissat-1.0.1-debug.apk` | Debuggable build, installs *next to* the release one (`tv.qissat.app.debug`). |
 
 **Android phone / tablet** – copy the APK to the phone (or download it from this repo), open it and allow
-"Install unknown apps" for your file manager/browser when asked. Or: `adb install Qissat-1.0.0-release.apk`.
+"Install unknown apps" for your file manager/browser when asked. Or: `adb install Qissat-1.0.1-release.apk`.
 
 **Android TV / Google TV** – easiest: put the APK on a USB stick or cloud drive and open it with a file manager
-app (e.g. *Send Files to TV*, *File Commander*), or `adb connect <tv-ip>:5555 && adb install Qissat-1.0.0-release.apk`
+app (e.g. *Send Files to TV*, *File Commander*), or `adb connect <tv-ip>:5555 && adb install Qissat-1.0.1-release.apk`
 (enable *Developer options → USB/Network debugging* first). Allow "Install unknown apps" for the installer app.
 Launch **Qissat** from the apps row.
 
 **Amazon Fire TV / Fire Stick** – *Settings → My Fire TV → Developer options → Install unknown apps* → enable for
 **Downloader**. Install the *Downloader* app, open it and enter the direct URL of the APK
-(e.g. the raw GitHub link to `dist/Qissat-1.0.0-release.apk`), install, then open **Qissat** from *Your Apps & Channels*.
-Or with ADB: *Developer options → ADB debugging on*, then `adb connect <fire-ip>:5555 && adb install Qissat-1.0.0-release.apk`.
+(e.g. the raw GitHub link to `dist/Qissat-1.0.1-release.apk`), install, then open **Qissat** from *Your Apps & Channels*.
+Or with ADB: *Developer options → ADB debugging on*, then `adb connect <fire-ip>:5555 && adb install Qissat-1.0.1-release.apk`.
 
 ## Using it
 
@@ -77,8 +77,11 @@ another app. Certificate errors are never bypassed.
 
 **Playback hosts without browsing them.** qisat.tv episodes load `w.anaplayer.online`, which frames one of several video hosts
 (`cdnplus`, `mp4plus`, `anafast`, `vidoba`, `vidspeed`, …) that rotate TLDs constantly (`cdnplus.sbs`, `cdnplus.space`, …).
-Frames are therefore allowed by provider *brand* (`frame_providers.txt`, any TLD) or when the site/player wrapper places an
-embed-looking frame; unknown frames nested inside a player page (where ad iframes live) are refused. Scripts, media, XHR and
+Frames are therefore allowed by provider *brand* (`frame_providers.txt`, any TLD). Player-wrapper pages are recognised by name
+(`anaplayer`, `shooof`) or by the plugin's `/albaplayer/` URL shape, so a wrapper added later (newer episodes go
+qisat → anaplayer → shooof.site → provider) works without an app update, and whatever a wrapper frames is accepted unless
+it is on the ad lists. Frames the site itself places must look like players; unknown frames nested inside a provider page
+(where ad iframes live) are refused. Scripts, media, XHR and
 images are allowed by default unless they hit the ad host list or an ad path signature, so the CDNs/segment hosts a player
 needs never have to be enumerated and can rotate freely.
 
@@ -118,7 +121,7 @@ of a personal sideload build; **generate your own key before publishing anywhere
 
 ## Tests
 
-* `./gradlew testDebugUnitTest` – 82 JVM tests: URL/ad policy against real site traffic, media sniffer, beacon parsing, cursor
+* `./gradlew testDebugUnitTest` – 86 JVM tests: URL/ad policy against real site traffic, media sniffer, beacon parsing, cursor
   (Robolectric), both activities (launch, menu, back, fullscreen, errors, retry, timeout), popup sink, end-to-end
   "stream sniffed → play beacon → native player launched", unplayable stream → web-player fallback.
 * `cd tools/shield-test && npm i && npm test` – runs `shield.js` in real headless Chromium against a hostile page

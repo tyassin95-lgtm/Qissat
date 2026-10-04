@@ -4,12 +4,17 @@ package tv.qissat.app.adblock
  * Decides what the embedded browser may load.
  *
  *  * Top-level navigation: qisat.tv only.
- *  * Frames: qisat.tv, known video-player providers, or an embed-looking frame placed directly
- *    by a page we already trust. Everything else (ad iframes) is refused.
+ *  * Frames: qisat.tv, known video-player providers, the site's player-wrapper pages (known or
+ *    recognised by their `/albaplayer/` URL shape) and whatever those wrappers frame. Frames
+ *    placed into the site itself must look like players. Everything else (ad iframes) is refused.
  *  * Sub-resources (scripts, media, XHR, images…): allowed unless they hit the ad host list or an
  *    ad path signature, so CDNs/streaming hosts keep working without being enumerated.
  */
 class UrlPolicy(private val rules: Rules) {
+
+    /** Wrapper hosts discovered at runtime (requests arrive on several threads). */
+    private val learnedWrappers: MutableSet<String> =
+        java.util.Collections.newSetFromMap(java.util.concurrent.ConcurrentHashMap<String, Boolean>())
 
     enum class Nav { ALLOW, UPGRADE_TO_HTTPS, BLOCK }
 
@@ -49,15 +54,32 @@ class UrlPolicy(private val rules: Rules) {
 
     private fun allowFrame(url: String, host: String, refererHost: String?): Boolean {
         if (rules.isFrameProvider(host)) return true
-        // A frame placed straight into the site or its player wrapper may be a provider we have
-        // not heard of yet, but only if it looks like an embed. Frames nested deeper (inside a
-        // provider page) must be a known provider; that is where ad iframes live. When the
-        // referer is unknown we fall back to the path heuristic rather than break playback.
-        if (refererHost == null) return looksLikeEmbed(url)
-        val trustedParent = isFirstPartyHost(refererHost) ||
-            HostUtil.brandLabel(refererHost) in WRAPPER_LABELS
-        return trustedParent && looksLikeEmbed(url)
+        val wrapperPage = HostUtil.pathOf(url).contains(WRAPPER_PATH)
+
+        // Referer unknown: fall back to what the URL looks like rather than break playback.
+        if (refererHost == null) {
+            return (looksLikeEmbed(url) || wrapperPage).also { if (it && wrapperPage) learnedWrappers += host }
+        }
+        // Pages of the site's own player plugin only ever contain the real provider frame, so
+        // anything (not on the ad lists) placed by one of them is accepted.
+        if (isWrapperHost(refererHost)) {
+            if (wrapperPage) learnedWrappers += host
+            return true
+        }
+        // The site itself places the player wrapper or a directly embedded provider; ad
+        // scripts also inject frames into it, so those must at least look like players.
+        if (isFirstPartyHost(refererHost)) {
+            val ok = wrapperPage || looksLikeEmbed(url)
+            if (ok && wrapperPage) learnedWrappers += host
+            return ok
+        }
+        // Frames nested deeper, inside a provider page, are where ad iframes live.
+        return false
     }
+
+    /** A host serving the site's player-wrapper plugin (known by name, or learned from its URL shape). */
+    private fun isWrapperHost(host: String): Boolean =
+        host in learnedWrappers || HostUtil.brandLabel(host) in WRAPPER_LABELS
 
     private fun looksLikeEmbed(url: String): Boolean {
         val p = HostUtil.pathOf(url)
@@ -75,7 +97,10 @@ class UrlPolicy(private val rules: Rules) {
         const val FIRST_PARTY = "qisat.tv"
 
         /** Player wrappers the site itself embeds; they in turn embed the real providers. */
-        private val WRAPPER_LABELS = setOf("anaplayer")
+        private val WRAPPER_LABELS = setOf("anaplayer", "shooof")
+
+        /** URL shape of the AlbaPlayer plugin pages; the wrapper domains rotate, the path does not. */
+        private const val WRAPPER_PATH = "/albaplayer/"
 
         private val EMBED_HINTS = listOf(
             "/embed", "embed-", "/player", "/iframe", "/e/", "/v/", "/f/", "/watch", "/stream", "/video",
