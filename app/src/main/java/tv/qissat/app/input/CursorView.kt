@@ -19,6 +19,10 @@ class CursorView @JvmOverloads constructor(
     var pointerY = 0f
         private set
 
+    /** False until the pointer has been placed once (so (0,0) stays a legitimate position). */
+    var placed = false
+        private set
+
     var clicking = false
         set(value) {
             if (field != value) {
@@ -61,6 +65,7 @@ class CursorView @JvmOverloads constructor(
     }
 
     fun moveTo(x: Float, y: Float) {
+        placed = true
         pointerX = x
         pointerY = y
         invalidate()

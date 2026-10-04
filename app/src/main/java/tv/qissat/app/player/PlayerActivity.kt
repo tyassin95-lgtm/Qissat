@@ -168,7 +168,8 @@ class PlayerActivity : ComponentActivity() {
         exo.addListener(playerListener)
         playerView.player = exo
         player = exo
-        session = MediaSession.Builder(this, exo).build()
+        // Unique id: a quick Back-then-Play can start a new player before the old one is destroyed.
+        session = MediaSession.Builder(this, exo).setId("qissat-" + System.nanoTime()).build()
 
         val mime = when (request.kind) {
             MediaSniffer.Kind.HLS -> MimeTypes.APPLICATION_M3U8

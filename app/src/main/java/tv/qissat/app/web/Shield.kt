@@ -21,18 +21,25 @@ class Shield(context: Context) {
         .replace("__QSH_NONCE__", nonce)
         .replace("__QSH_BRIDGE__", Config.BRIDGE_HOST)
 
+    /** The personalised script (exposed for tests). */
+    internal val script: String get() = source
+
     /** True once the script is registered to run in all frames before page scripts. */
     var documentStartInstalled = false
         private set
 
     fun install(webView: WebView) {
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
-            try {
+        // Some OEM WebViews throw from the feature probe itself; any failure just means the
+        // page-start fallback below is used instead.
+        documentStartInstalled = try {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
                 WebViewCompat.addDocumentStartJavaScript(webView, source, setOf("*"))
-                documentStartInstalled = true
-            } catch (_: Exception) {
-                documentStartInstalled = false
+                true
+            } else {
+                false
             }
+        } catch (_: Throwable) {
+            false
         }
     }
 

@@ -170,7 +170,7 @@ class CursorController(
     }
 
     fun centerIfNeeded() {
-        if (cursor.pointerX == 0f && cursor.pointerY == 0f && cursor.width > 0) {
+        if (!cursor.placed && cursor.width > 0) {
             cursor.moveTo(cursor.width / 2f, cursor.height / 2f)
         }
     }

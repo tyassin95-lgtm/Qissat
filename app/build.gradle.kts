@@ -20,7 +20,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
-        resourceConfigurations += listOf("en", "ar")
     }
 
     signingConfigs {
@@ -53,8 +52,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    androidResources {
+        localeFilters += listOf("en", "ar")
     }
 
     buildFeatures {
@@ -72,7 +71,16 @@ android {
     }
 
     testOptions {
-        unitTests.isReturnDefaultValues = true
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -89,4 +97,7 @@ dependencies {
     implementation("androidx.media3:media3-session:$media3")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.17")
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation("androidx.test.ext:junit:1.2.1")
 }

@@ -1,0 +1,12 @@
+<!doctype html><html><body style="margin:0">
+<h1 id="h">first party</h1>
+<a id="ext" href="https://evil.example/x" target="_blank">ext</a>
+<a id="internal" href="/other.html" target="_blank">internal blank</a>
+<iframe id="player" src="http://player.local:8765/wrapper.html" width="640" height="360" allowfullscreen></iframe>
+<script>
+  window.__results = {};
+  window.__results.openFake = (function(){ var w = window.open('https://ad.example/p'); return !!w && w.closed === false; })();
+  var a = document.createElement('a'); a.href='https://ad.example/q'; a.target='_blank'; document.body.appendChild(a); a.remove();
+  window.__detached = a;
+</script>
+</body></html>

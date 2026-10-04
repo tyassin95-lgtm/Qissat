@@ -98,7 +98,21 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
     private var connectivity: ConnectivityManager? = null
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
-    private val timeoutRunnable = Runnable { onMainFrameError(webView?.url, LoadError.TIMEOUT) }
+    private var lastProgress = 0
+    private var lastError: LoadError? = null
+
+    /**
+     * A stalled third-party resource can keep the load event from firing on a page that is
+     * already perfectly usable; only treat the load as failed if little of it arrived.
+     */
+    private val timeoutRunnable = Runnable {
+        if (lastProgress >= USABLE_PROGRESS) {
+            progress.visibility = View.GONE
+            hideSplash()
+        } else {
+            onMainFrameError(webView?.url, LoadError.TIMEOUT)
+        }
+    }
 
     private val playerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         onPlayerResult(it.resultCode)
@@ -247,6 +261,7 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
 
     override fun onPageStarted(url: String) {
         loadFailed = false
+        lastProgress = 0
         val key = pageKey(url)
         if (key != currentPageKey) {
             currentPageKey = key
@@ -259,6 +274,7 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
     }
 
     override fun onProgress(percent: Int) {
+        lastProgress = percent
         progress.progress = percent
         if (percent >= 70) hideSplash()
         if (percent >= 100) progress.visibility = View.GONE
@@ -267,7 +283,10 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
     override fun onPageFinished(url: String) {
         handler.removeCallbacks(timeoutRunnable)
         progress.visibility = View.GONE
-        if (!loadFailed) {
+        // A timeout overlay is dismissed if the page does eventually load; real failures stay
+        // until the user retries.
+        if (!loadFailed || lastError == LoadError.TIMEOUT) {
+            loadFailed = false
             hideError()
             hideSplash()
         }
@@ -277,6 +296,7 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
         handler.removeCallbacks(timeoutRunnable)
         if (loadFailed && errorPanel.visibility == View.VISIBLE) return
         loadFailed = true
+        lastError = error
         pendingUrl = url?.takeIf { policy.navigation(it) != UrlPolicy.Nav.BLOCK }
         progress.visibility = View.GONE
         val (title, message) = when (error) {
@@ -614,6 +634,7 @@ class MainActivity : ComponentActivity(), BrowserCallbacks {
         const val PREF_CURSOR = "cursor"
         const val PREF_NATIVE = "native_player"
         const val PREF_HINT_SHOWN = "hint_shown"
+        const val USABLE_PROGRESS = 60
         const val SEEK_SHORT_S = 10
         const val SEEK_LONG_S = 60
     }
